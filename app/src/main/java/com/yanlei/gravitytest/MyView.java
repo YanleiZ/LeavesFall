@@ -4,12 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 
 /**
@@ -22,6 +19,8 @@ public class MyView extends View {
     public static double myViewH;
     public static double myViewW;
     static private int drawableInt;
+    Bitmap newbmp;
+    Bitmap bmp;
     //创建画笔
     Paint paint = new Paint();
 
@@ -35,20 +34,26 @@ public class MyView extends View {
         super.onDraw(canvas);
         //paint.setColor(Color.YELLOW);
         //canvas.drawCircle(X, Y, 50, paint);
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), drawableInt);
-        Matrix matrix = new Matrix();
 
-        matrix.postScale(0.08f, 0.08f);
-        myViewH = 0.08 * bmp.getHeight();
-        myViewW = 0.08 * bmp.getWidth();
+//        BitmapDrawable bmpDraw = new BitmapDrawable(getResources().openRawResource(drawableInt));
+//        Bitmap bmp = bmpDraw.getBitmap();
+        bmp = BitmapFactory.decodeResource(getResources(), drawableInt);
+        Matrix matrix = new Matrix();
+        matrix.postScale(0.1f, 0.1f);
+
         // 得到新的图片
-        Bitmap newbmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix,
+        newbmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix,
                 true);
+        myViewH = newbmp.getHeight();
+        myViewW = newbmp.getWidth();
         canvas.drawBitmap(newbmp, 0, 0, paint);
     }
 
     public void reDrow(int drawable) {
         drawableInt = drawable;
+        bmp.recycle();
+        newbmp.recycle();
+        System.gc();
         this.postInvalidate();
     }
 

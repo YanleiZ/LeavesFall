@@ -13,8 +13,6 @@ import android.view.View;
  * Created by Yanlei on 2016/6/1.
  */
 public class BarrierView extends View {
-    public float X = 50;
-    public float Y = 50;
     //对外以公开树枝的宽度和高度
     public static double shuzhiH;
     public static double shuzhiW;
@@ -33,13 +31,17 @@ public class BarrierView extends View {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.shuzhi);
         Matrix matrix = new Matrix();
 
-        matrix.postScale(0.5f, 0.5f);
-        shuzhiH = 0.5 * bmp.getHeight();
-        shuzhiW = 0.5 * bmp.getWidth();
+        matrix.postScale(0.8f, 0.8f);
+
         // 得到新的图片
         Bitmap newbmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix,
                 true);
+        shuzhiH = newbmp.getHeight();
+        shuzhiW = newbmp.getWidth();
         canvas.drawBitmap(newbmp, 0, 80, paint);
+        bmp.recycle();
+        newbmp.recycle();
+        System.gc();
     }
 
 }

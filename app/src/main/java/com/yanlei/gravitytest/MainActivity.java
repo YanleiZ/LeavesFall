@@ -3,28 +3,26 @@ package com.yanlei.gravitytest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yanlei.gravitytest.adversary.ButterflyView;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,8 +32,8 @@ public class MainActivity extends Activity {
     private float x, y, z;
     private MyView myView;
     BarrierView bv;
+    ButterflyView bfv;
     private static float x_x, x_y;
-    //private static float i1 = 1, i2 = 1, i3 = 2, i4 = 2;
     private RelativeLayout im;
     //屏幕的高度和宽度
     public static float width;
@@ -44,7 +42,7 @@ public class MainActivity extends Activity {
     private static double bvLocationY;
     private static int toastTag = 0;
     private boolean fall = true;
-    static int shuyetag = 0;
+    private int shuyetag = 0;
 
 
     @Override
@@ -60,18 +58,24 @@ public class MainActivity extends Activity {
         textView = (TextView) findViewById(R.id.textView);
         im = (RelativeLayout) findViewById(R.id.re);
 
-        gameView = (GameView) findViewById(R.id.gameview);
-
+        // gameView = (GameView) findViewById(R.id.gameview);
+        gameView = new GameView(MainActivity.this);
+        im.addView(gameView);
         Drawable d = getDrawable(R.drawable.tree4);
         BitmapDrawable bd = (BitmapDrawable) d;
         Bitmap bm = bd.getBitmap();
+
         gameView.Start(bm, getWindow());
         myView = new MyView(MainActivity.this, R.drawable.shuye1);
         bv = new BarrierView(MainActivity.this);
+        bfv = new ButterflyView(MainActivity.this);
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new UpdateTask(), 1, 50);
+        if (!GameView.isover) {
+            timer.scheduleAtFixedRate(new UpdateTask(), 1, 50);
+        }
         timer.scheduleAtFixedRate(new UpdateShuyeTask(), 4000, 4000);
         im.addView(bv);
+        im.addView(bfv);
         im.addView(myView);
         //bv.setX(x_x);
         //bv.setY(x_y);
@@ -198,9 +202,33 @@ public class MainActivity extends Activity {
                     shuyetag++;
                     break;
                 case 4:
-                    new AlertDialog.Builder(MainActivity.this).setTitle("确认").setMessage("确定吗？")
-                            .setPositiveButton("是", null)
-                            .setNegativeButton("否", null).show();
+                    shuyetag++;
+                    myView.setVisibility(View.GONE);
+                    GameView.isover = true;
+                    new AlertDialog.Builder(MainActivity.this, AlertDialog.BUTTON_POSITIVE).setTitle("ＧＡＭＥ　ＯＶＥＲ").setMessage("再来一次？")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(MainActivity.this, MainActivity.class));
+                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    finish();
+                                    GameView.isover = false;
+
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(MainActivity.this, StartActivity.class));
+                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    finish();
+
+                                }
+                            }).setCancelable(false).setIcon(R.drawable.shuye3).show();
+                    break;
+
+                default:
+
 
             }
         }
@@ -238,8 +266,9 @@ public class MainActivity extends Activity {
         public void run() {
             Message message = new Message();
             message.what = 1;
-            upDateHandler.sendMessage(message);
-
+            if (!GameView.isover) {
+                upDateHandler.sendMessage(message);
+            }
         }
     }
 
@@ -252,5 +281,6 @@ public class MainActivity extends Activity {
 
         }
     }
+
 }
 

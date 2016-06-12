@@ -29,31 +29,19 @@ import java.util.TimerTask;
  */
 public class GameView extends View {
     Bitmap back;
-
     int nowY = 0;
     int backHeight;
     int vw;
     int vh;
     int speed;
-
+    public static boolean isover = false;
     public GameView(Context context) {
         super(context);
     }
-
-    public GameView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public GameView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
     // 启动
     public void Start(Bitmap backMap, Window windows) {
-
         int h = backMap.getHeight();
         int w = backMap.getWidth();
-
         // 获取设备高度和宽度
         Rect frame = new Rect();
         windows.getDecorView().getWindowVisibleDisplayFrame(frame);
@@ -61,26 +49,21 @@ public class GameView extends View {
         vw = frame.width();
         // 计算缩放比例
         float scaleWidth = ((float) vw) / w;
-        float scaleHeight = ((float) vh) / h;
-
         // 取得想要缩放的matrix参数
-
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, 1);
         // 设置滚动速度
         speed = 10;
-        //裁剪一下
-        // back = Bitmap.createBitmap(backMap, 0, 0, backMap.getWidth(), vh);
         //缩放一下
         back = Bitmap.createBitmap(backMap, 0, 0, w, h, matrix, true);
         backHeight = back.getHeight();
-
         final Handler handler = new Handler() {
-
             public void handleMessage(Message msg) {
                 if (msg.what == 0x123) {
                     // 该函数的作用是使整个窗口客户区无效。窗口的客户区无效意味着需要重绘
                     invalidate();
+                } else {
+
                 }
             }
         };
@@ -88,7 +71,9 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                handler.sendEmptyMessage(0x123);
+                if (!isover) {
+                    handler.sendEmptyMessage(0x123);
+                }
             }
         }, 0, 80);
     }
@@ -96,7 +81,6 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         int h = backHeight - nowY;
-
         if (vh <= h) {
             // 图片剩余宽度大于屏幕宽度，从原图上截取屏幕窗口大小的一块区域
             Bitmap bitmap = Bitmap.createBitmap(back, 0, nowY, vw, vh);
@@ -107,7 +91,10 @@ public class GameView extends View {
             Bitmap bitmap2 = Bitmap.createBitmap(back, 0, 0, vw, vh - h);
             canvas.drawBitmap(bitmap2, 0, h, null);
         }
-
+//        if (isover) {
+//            back.recycle();
+//            System.gc();
+//        }
         if (nowY + speed >= backHeight) {
             nowY = 0;
         } else {
