@@ -210,7 +210,7 @@ public class MainActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     startActivity(new Intent(MainActivity.this, MainActivity.class));
-                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     finish();
                                     GameView.isover = false;
 
@@ -220,7 +220,7 @@ public class MainActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     startActivity(new Intent(MainActivity.this, StartActivity.class));
-                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     finish();
 
                                 }
