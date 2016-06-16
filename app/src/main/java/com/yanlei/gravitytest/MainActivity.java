@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     //屏幕的高度和宽度
     public static float width;
     public static float height;
+    //private GameBg gameView;
     private GameView gameView;
     private static double bvLocationY;
     private static int toastTag = 0;
@@ -48,7 +49,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        gameView = new GameView(this);
+
         WindowManager wm = (WindowManager) MainActivity.this
                 .getSystemService(Context.WINDOW_SERVICE);
 
@@ -57,20 +61,20 @@ public class MainActivity extends Activity {
         bvLocationY = height + BarrierView.shuzhiH;
         textView = (TextView) findViewById(R.id.textView);
         im = (RelativeLayout) findViewById(R.id.re);
-
-        // gameView = (GameView) findViewById(R.id.gameview);
-        gameView = new GameView(MainActivity.this);
         im.addView(gameView);
+        // gameView = (GameView) findViewById(R.id.gameview);
+        //gameView = new GameBg(MainActivity.this);
+
         Drawable d = getDrawable(R.drawable.tree4);
         BitmapDrawable bd = (BitmapDrawable) d;
         Bitmap bm = bd.getBitmap();
 
-        gameView.Start(bm, getWindow());
+        // gameView.Start(bm, getWindow());
         myView = new MyView(MainActivity.this, R.drawable.shuye1);
         bv = new BarrierView(MainActivity.this);
         bfv = new ButterflyView(MainActivity.this);
         Timer timer = new Timer();
-        if (!GameView.isover) {
+        if (!GameBg.isover) {
             timer.scheduleAtFixedRate(new UpdateTask(), 1, 50);
         }
         timer.scheduleAtFixedRate(new UpdateShuyeTask(), 4000, 4000);
@@ -204,7 +208,7 @@ public class MainActivity extends Activity {
                 case 4:
                     shuyetag++;
                     myView.setVisibility(View.GONE);
-                    GameView.isover = true;
+                    GameBg.isover = true;
                     new AlertDialog.Builder(MainActivity.this, AlertDialog.BUTTON_POSITIVE).setTitle("ＧＡＭＥ　ＯＶＥＲ").setMessage("再来一次？")
                             .setPositiveButton("是", new DialogInterface.OnClickListener() {
                                 @Override
@@ -212,7 +216,7 @@ public class MainActivity extends Activity {
                                     startActivity(new Intent(MainActivity.this, MainActivity.class));
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     finish();
-                                    GameView.isover = false;
+                                    GameBg.isover = false;
 
                                 }
                             })
@@ -266,7 +270,7 @@ public class MainActivity extends Activity {
         public void run() {
             Message message = new Message();
             message.what = 1;
-            if (!GameView.isover) {
+            if (!GameBg.isover) {
                 upDateHandler.sendMessage(message);
             }
         }

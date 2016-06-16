@@ -7,6 +7,7 @@
     android:background="@drawable/sky"
     tools:context="com.yanlei.gravitytest.MainActivity">
 
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

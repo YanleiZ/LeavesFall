@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
-import com.yanlei.gravitytest.GameView;
 import com.yanlei.gravitytest.R;
 
 /**
