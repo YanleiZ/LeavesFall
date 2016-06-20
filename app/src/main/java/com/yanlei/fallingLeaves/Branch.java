@@ -1,4 +1,4 @@
-package com.yanlei.gravitytest;
+package com.yanlei.fallingLeaves;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,9 +14,9 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Created by Yanlei on 2016/6/15.
+ * Created by Yanlei on 2016/6/20.
  */
-public class GMBackground {
+public class Branch {
     private FloatBuffer vertexBuffer;
     private FloatBuffer textureBuffer;
     private ByteBuffer indexBuffer;
@@ -32,17 +32,17 @@ public class GMBackground {
 
     private float texture[] = {
             0.0f, 0.0f,
-            1.0f, 0f,
-            1f, 1.0f,
-            0f, 1f,
+            0.25f, 0.0f,
+            0.25f, 0.25f,
+            0.0f, 0.25f,
     };
 
     private byte indices[] = {
-            0,1,2,
-            0,2,3,
+            0, 1, 2,
+            0, 2, 3,
     };
 
-    public GMBackground() {
+    public Branch() {
         ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
         byteBuf.order(ByteOrder.nativeOrder());
         vertexBuffer = byteBuf.asFloatBuffer();
@@ -80,21 +80,20 @@ public class GMBackground {
         gl.glDisable(GL10.GL_CULL_FACE);
     }
 
-
-    public void loadTexture(GL10 gl,int texture, Context context) {
-        InputStream imageStream = context.getResources().openRawResource(texture);
+    public void loadTexture(GL10 gl, int texture, Context context) {
+        InputStream imagestream = context.getResources().openRawResource(texture);
         Bitmap bitmap = null;
         try {
 
-            bitmap = BitmapFactory.decodeStream(imageStream);
+            bitmap = BitmapFactory.decodeStream(imagestream);
 
-        }catch(Exception e){
+        } catch (Exception e) {
 
-        }finally {
+        } finally {
             //Always clear and close
             try {
-                imageStream.close();
-                imageStream = null;
+                imagestream.close();
+                imagestream = null;
             } catch (IOException e) {
             }
         }
@@ -105,11 +104,13 @@ public class GMBackground {
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
 
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 
         bitmap.recycle();
     }
+
 }
+

@@ -1,4 +1,4 @@
-package com.yanlei.gravitytest;
+package com.yanlei.fallingLeaves;
 
 import org.junit.Test;
 

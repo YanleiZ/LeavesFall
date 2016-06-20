@@ -1,7 +1,9 @@
-package com.yanlei.gravitytest;
+package com.yanlei.fallingLeaves;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+
+import com.yanlei.fallingLeaves.common.GMEngine;
 
 /**
  * Created by Yanlei on 2016/6/15.

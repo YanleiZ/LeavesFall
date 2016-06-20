@@ -1,4 +1,4 @@
-package com.yanlei.gravitytest.adversary;
+package com.yanlei.fallingLeaves.adversary;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
-import com.yanlei.gravitytest.R;
+import com.yanlei.fallingLeaves.R;
 
 /**
  * Created by Yanlei on 2016/6/8.
@@ -44,7 +44,7 @@ public class ButterflyView extends View {
         @Override
         public void run() {
             try {
-                Thread.sleep(10);
+                Thread.sleep(100);
                 handler.sendEmptyMessage(ANIMUPDATE);
 
             } catch (InterruptedException e) {

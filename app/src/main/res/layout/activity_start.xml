@@ -11,13 +11,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
-    tools:context="com.yanlei.gravitytest.StartActivity">
+    tools:context="com.yanlei.fallingLeaves.StartActivity">
 
     <LinearLayout
         android:layout_width="198dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/startbtn"
@@ -25,10 +25,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_marginTop="200dp"
             android:alpha="200"
             android:background="@drawable/start_btn"
-            android:text="开始游戏"
-            android:layout_marginTop="200dp"/>
+            android:text="开始游戏" />
 
         <Button
             android:id="@+id/listbtn"
@@ -52,4 +52,12 @@
             android:background="@drawable/start_btn"
             android:text="退出游戏" />
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/musicswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:checked="true"
+        android:text="音效" />
 </FrameLayout>

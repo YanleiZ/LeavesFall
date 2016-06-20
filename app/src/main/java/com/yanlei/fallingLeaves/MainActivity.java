@@ -1,4 +1,4 @@
-package com.yanlei.gravitytest;
+package com.yanlei.fallingLeaves;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,7 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yanlei.gravitytest.adversary.ButterflyView;
+import com.yanlei.fallingLeaves.adversary.ButterflyView;
+import com.yanlei.fallingLeaves.common.GMEngine;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,8 +39,7 @@ public class MainActivity extends Activity {
     //屏幕的高度和宽度
     public static float width;
     public static float height;
-    //private GameBg gameView;
-    private GameView gameView;
+    //private GameView gameView;
     private static double bvLocationY;
     private static int toastTag = 0;
     private boolean fall = true;
@@ -51,21 +51,20 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        gameView = new GameView(this);
+       // gameView = new GameView(this);
 
         WindowManager wm = (WindowManager) MainActivity.this
                 .getSystemService(Context.WINDOW_SERVICE);
 
-        width = wm.getDefaultDisplay().getWidth();
-        height = wm.getDefaultDisplay().getHeight();
+
         bvLocationY = height + BarrierView.shuzhiH;
         textView = (TextView) findViewById(R.id.textView);
         im = (RelativeLayout) findViewById(R.id.re);
-        im.addView(gameView);
+        //im.addView(gameView);
         // gameView = (GameView) findViewById(R.id.gameview);
         //gameView = new GameBg(MainActivity.this);
 
-        Drawable d = getDrawable(R.drawable.tree4);
+        Drawable d = getDrawable(R.drawable.tree);
         BitmapDrawable bd = (BitmapDrawable) d;
         Bitmap bm = bd.getBitmap();
 
@@ -74,16 +73,13 @@ public class MainActivity extends Activity {
         bv = new BarrierView(MainActivity.this);
         bfv = new ButterflyView(MainActivity.this);
         Timer timer = new Timer();
-        if (!GameBg.isover) {
+        if (!GMEngine.GAMEOVER) {
             timer.scheduleAtFixedRate(new UpdateTask(), 1, 50);
         }
         timer.scheduleAtFixedRate(new UpdateShuyeTask(), 4000, 4000);
         im.addView(bv);
-        im.addView(bfv);
+        //im.addView(bfv);
         im.addView(myView);
-        //bv.setX(x_x);
-        //bv.setY(x_y);
-
 
         x_x = width / 2;
         x_y = height / 4;
@@ -208,7 +204,7 @@ public class MainActivity extends Activity {
                 case 4:
                     shuyetag++;
                     myView.setVisibility(View.GONE);
-                    GameBg.isover = true;
+                    GMEngine.GAMEOVER = true;
                     new AlertDialog.Builder(MainActivity.this, AlertDialog.BUTTON_POSITIVE).setTitle("ＧＡＭＥ　ＯＶＥＲ").setMessage("再来一次？")
                             .setPositiveButton("是", new DialogInterface.OnClickListener() {
                                 @Override
@@ -216,7 +212,7 @@ public class MainActivity extends Activity {
                                     startActivity(new Intent(MainActivity.this, MainActivity.class));
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     finish();
-                                    GameBg.isover = false;
+                                    GMEngine.GAMEOVER = false;
 
                                 }
                             })
@@ -226,6 +222,7 @@ public class MainActivity extends Activity {
                                     startActivity(new Intent(MainActivity.this, StartActivity.class));
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     finish();
+                                    GMEngine.GAMEOVER = false;
 
                                 }
                             }).setCancelable(false).setIcon(R.drawable.shuye3).show();
@@ -257,7 +254,6 @@ public class MainActivity extends Activity {
                 // 利用handler延迟发送更改状态信息
                 mHandler.sendEmptyMessageDelayed(0, 2000);
             } else {
-                //System.exit(0);
                 finish();
             }
             return false;
@@ -270,7 +266,7 @@ public class MainActivity extends Activity {
         public void run() {
             Message message = new Message();
             message.what = 1;
-            if (!GameBg.isover) {
+            if (!GMEngine.GAMEOVER) {
                 upDateHandler.sendMessage(message);
             }
         }
