@@ -2,6 +2,7 @@ package com.yanlei.fallingLeaves.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Display;
 import android.view.View;
 
@@ -23,8 +24,7 @@ public class GMEngine {
     public static float SCROLL_BACKGROUND_2 = -.005f;
     public static final int BACKGROUND_LAYER_ONE = R.drawable.sky;
     public static final int BACKGROUND_LAYER_TWO = R.drawable.tree;
-    public static final int SPIRIT_LIST = R.drawable.shuye;
-    public static boolean GAMEOVER = false;
+    public static final int SPIRIT_LIST = R.drawable.spritesheet;
     public static float leavesY = 7f;
     public static float leavesX = 2.5f;
     public static float butterflyY;
@@ -33,21 +33,27 @@ public class GMEngine {
     public static float gravityX = 0;
     public static float gravityY = 0;
     public static float gravityZ = 0;
-    public static float branchY = 0f;
+    public static boolean collision = false;
+    public static int game_score = 0;
+    public static SQLiteDatabase db;
+    public static float branchY = -0.5f;
+    public static float branchLX = 0f;
+    public static float branchRX = 1.7f;
+    public static int overint = 0;
 
     //树叶的损坏值
     public static int damage_value = 0;
     //背景音乐打开标记
     public static boolean MUSIC_SWITCH = true;
     public static final int PLAYER_FRAMES_BETWEEN_ANI = 5;
+    public static boolean gameOver = false;
 
     /*Kill game and exit*/
     public boolean onExit(View v) {
         try {
-            Intent bgmusic = new Intent(context, com.yanlei.fallingLeaves.common.BackgroundMusic.class);
-            context.stopService(bgmusic);
+            Intent bgMusic = new Intent(context, BackgroundMusic.class);
+            context.stopService(bgMusic);
             musicThread.stop();
-
             return true;
         } catch (Exception e) {
             return false;

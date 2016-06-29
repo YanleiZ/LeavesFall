@@ -4,13 +4,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".StartActivity"
             android:screenOrientation="portrait">
@@ -28,7 +25,12 @@
         <service
             android:name=".common.BackgroundMusic"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name=".GameRankingActivity"
+            android:label="@string/title_activity_game_ranking"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

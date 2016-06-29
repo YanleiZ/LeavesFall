@@ -1,9 +1,14 @@
 package com.yanlei.fallingLeaves;
 
+import android.content.ContentValues;
 import android.opengl.GLSurfaceView.Renderer;
-import android.widget.Toast;
+import android.util.Log;
 
+import com.yanlei.fallingLeaves.adversary.Branch;
+import com.yanlei.fallingLeaves.adversary.Butterfly;
 import com.yanlei.fallingLeaves.common.GMEngine;
+
+import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -21,6 +26,10 @@ public class GameRender implements Renderer {
     private float bgScroll2;
     private int leaves_frams = 0;
     private int butterfly_frams = 0;
+    private int butterflyType = 0;
+    private float sheetX = 0;
+    private float sheetY = 0;
+    private static int branchtype = 0;
 
     @Override
     public void onDrawFrame(GL10 gl) {
@@ -39,6 +48,7 @@ public class GameRender implements Renderer {
         movePlayer(gl);
         moveBranch(gl);
         moveButterfly(gl);
+
         detectCollisions();
 
         gl.glEnable(GL10.GL_BLEND);
@@ -64,7 +74,8 @@ public class GameRender implements Renderer {
         gl.glTranslatef(0.0f, bgScroll1, 0.0f);
         background.draw(gl);
         gl.glPopMatrix();
-        if (!GMEngine.GAMEOVER) {
+        Log.i("zzzzz", GMEngine.gameOver + "  ------------------");
+        if (!GMEngine.gameOver) {
             bgScroll1 += GMEngine.SCROLL_BACKGROUND_1;
         }
         gl.glLoadIdentity();
@@ -85,7 +96,7 @@ public class GameRender implements Renderer {
         gl.glTranslatef(0.0f, bgScroll2, 0.0f);
         background2.draw(gl);
         gl.glPopMatrix();
-        if (!GMEngine.GAMEOVER) {
+        if (!GMEngine.gameOver) {
             bgScroll2 += GMEngine.SCROLL_BACKGROUND_2;
         }
         gl.glLoadIdentity();
@@ -115,12 +126,13 @@ public class GameRender implements Renderer {
         background.loadTexture(gl, GMEngine.BACKGROUND_LAYER_ONE, GMEngine.context);
         background2.loadTexture(gl, GMEngine.BACKGROUND_LAYER_TWO, GMEngine.context);
         leaves.loadTexture(gl, GMEngine.SPIRIT_LIST, GMEngine.context);
-        branch.loadTexture(gl, R.drawable.shuzhi, GMEngine.context);
+        branch.loadTexture(gl, R.drawable.shuzhisheet, GMEngine.context);
         butterfly.loadTexture(gl, GMEngine.SPIRIT_LIST, GMEngine.context);
     }
 
     public void movePlayer(GL10 gl) {
         switch ((int) GMEngine.gravityX) {
+            case 2:
             case 3:
             case 4:
             case 5:
@@ -139,7 +151,7 @@ public class GameRender implements Renderer {
                     gl.glTranslatef(GMEngine.leavesX, GMEngine.leavesY, 0f);
                     gl.glMatrixMode(GL10.GL_TEXTURE);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(0.0f, 0.0f, 0.0f);
+                    gl.glTranslatef(sheetX, sheetY, 0.0f);
                     leaves.draw(gl);
                     gl.glPopMatrix();
                     gl.glLoadIdentity();
@@ -154,13 +166,14 @@ public class GameRender implements Renderer {
                     gl.glTranslatef(GMEngine.leavesX, GMEngine.leavesY, 0f);
                     gl.glMatrixMode(GL10.GL_TEXTURE);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(0.0f, 0.0f, 0.0f);
+                    gl.glTranslatef(sheetX, sheetY, 0.0f);
                     leaves.draw(gl);
                     gl.glPopMatrix();
                     gl.glLoadIdentity();
                     leaves_frams += 1;
                 }
                 break;
+            case -2:
             case -3:
             case -4:
             case -5:
@@ -179,7 +192,7 @@ public class GameRender implements Renderer {
                     gl.glTranslatef(GMEngine.leavesX, GMEngine.leavesY, 0f);
                     gl.glMatrixMode(GL10.GL_TEXTURE);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(0.0f, 0.0f, 0.0f);
+                    gl.glTranslatef(sheetX, sheetY, 0.0f);
                     leaves.draw(gl);
                     gl.glPopMatrix();
                     gl.glLoadIdentity();
@@ -194,7 +207,7 @@ public class GameRender implements Renderer {
                     gl.glTranslatef(GMEngine.leavesX, GMEngine.leavesY, 0f);
                     gl.glMatrixMode(GL10.GL_TEXTURE);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(0.0f, 0.0f, 0.0f);
+                    gl.glTranslatef(sheetX, sheetY, 0.0f);
                     leaves.draw(gl);
                     gl.glPopMatrix();
                     gl.glLoadIdentity();
@@ -211,7 +224,7 @@ public class GameRender implements Renderer {
                 gl.glTranslatef(GMEngine.leavesX, GMEngine.leavesY, 0f);
                 gl.glMatrixMode(GL10.GL_TEXTURE);
                 gl.glLoadIdentity();
-                gl.glTranslatef(0.0f, 0.0f, 0.0f);
+                gl.glTranslatef(sheetX, sheetY, 0.0f);
                 leaves.draw(gl);
                 gl.glPopMatrix();
                 gl.glLoadIdentity();
@@ -220,78 +233,173 @@ public class GameRender implements Renderer {
     }
 
     public void moveBranch(GL10 gl) {
-        if (bgScroll2 == Float.MAX_VALUE) {
-            bgScroll2 = 0f;
+        if (!GMEngine.gameOver) {
+            if (bgScroll2 == Float.MAX_VALUE) {
+                bgScroll2 = 0f;
+            }
+            if (GMEngine.branchY <= 10 / 2) {
+                if (branchtype == 0) {
+                    gl.glMatrixMode(GL10.GL_MODELVIEW);
+                    gl.glLoadIdentity();
+                    gl.glPushMatrix();
+                    gl.glScalef(.27f, .2f, 1f);
+                    GMEngine.branchY += .01f;
+                    gl.glTranslatef(0f, GMEngine.branchY, 0f);
+
+                    gl.glMatrixMode(GL10.GL_TEXTURE);
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(0.0f, 0.0f, 0.0f);
+                    branch.draw(gl);
+                    gl.glPopMatrix();
+
+                    gl.glLoadIdentity();
+                } else {
+                    gl.glMatrixMode(GL10.GL_MODELVIEW);
+                    gl.glLoadIdentity();
+                    gl.glPushMatrix();
+                    gl.glScalef(.27f, .2f, 1f);
+                    GMEngine.branchY += .01f;
+                    gl.glTranslatef(1.7f, GMEngine.branchY, 0f);
+
+                    gl.glMatrixMode(GL10.GL_TEXTURE);
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(0.5f, 0.0f, 0.0f);
+                    branch.draw(gl);
+                    gl.glPopMatrix();
+
+                    gl.glLoadIdentity();
+                }
+            } else {
+                GMEngine.game_score += 15;
+                GameMain.MyHandler mHandler3 = GameMain.mAPP.getHandler();
+                mHandler3.sendEmptyMessage(2);
+                GMEngine.branchY = -0.5f;
+                if (branchtype == 0) {
+                    branchtype = 1;
+                } else {
+                    branchtype = 0;
+                }
+
+            }
+        } else if (GMEngine.gameOver && GMEngine.overint == 0) {
+            GameMain.MyHandler mHandler2 = GameMain.mAPP.getHandler();
+            mHandler2.sendEmptyMessage(1);
+            ContentValues values1 = new ContentValues();
+            values1.put("score", GMEngine.game_score);
+            GMEngine.db.insert("GameRanking", "错误！", values1);
+            GMEngine.branchY = -0.5f;
         }
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glPushMatrix();
-        gl.glScalef(.31f, .1f, 1f);
-        gl.glTranslatef(0f, 0f, 0f);
-
-        gl.glMatrixMode(GL10.GL_TEXTURE);
-        gl.glLoadIdentity();
-        gl.glTranslatef(0.0f, GMEngine.branchY, 0.0f);
-        branch.draw(gl);
-        gl.glPopMatrix();
-
-        gl.glLoadIdentity();
     }
 
     public void moveButterfly(GL10 gl) {
-        if (butterfly_frams >= 8) {
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            gl.glPushMatrix();
-            //缩放
-            gl.glScalef(.15f, .09f, 1f);
+        if (!GMEngine.gameOver) {
+            if (butterfly_frams >= 8) {
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glPushMatrix();
+                //缩放
+                gl.glScalef(.15f, .09f, 1f);
 
-            gl.glTranslatef(GMEngine.butterflyX, GMEngine.butterflyY, 0f);
-            gl.glMatrixMode(GL10.GL_TEXTURE);
-            gl.glLoadIdentity();
-            gl.glTranslatef(0.26f, 0.25f, 0.0f);
-            butterfly.draw(gl);
-            gl.glPopMatrix();
-            gl.glLoadIdentity();
-            if (butterfly_frams < 16) {
+                gl.glTranslatef(GMEngine.butterflyX, GMEngine.butterflyY, 0f);
+                gl.glMatrixMode(GL10.GL_TEXTURE);
+                gl.glLoadIdentity();
+                gl.glTranslatef(0.26f, 0.25f, 0.0f);
+                butterfly.draw(gl);
+                gl.glPopMatrix();
+                gl.glLoadIdentity();
+                if (butterfly_frams < 16) {
+                    butterfly_frams += 1;
+                } else {
+                    butterfly_frams = 0;
+                }
+                if (GMEngine.leavesY - GMEngine.butterflyY <= 1) {
+                    GMEngine.butterflyY += 0.01;
+                    GMEngine.butterflyX += 0.01;
+                } else {
+                    GMEngine.butterflyX += 0.01 * (GMEngine.leavesX - GMEngine.butterflyX) / (GMEngine.leavesY - GMEngine.butterflyY);
+                    GMEngine.butterflyY += 0.01;
+                }
+
+            } else if (butterfly_frams < 8) {
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glPushMatrix();
+                //缩放
+                gl.glScalef(.15f, .09f, 1f);
+                if (GMEngine.leavesY - GMEngine.butterflyY <= 1) {
+                    GMEngine.butterflyY += 0.01;
+                    GMEngine.butterflyX += 0.01;
+                } else {
+                    GMEngine.butterflyX += 0.01 * (GMEngine.leavesX - GMEngine.butterflyX) / (GMEngine.leavesY - GMEngine.butterflyY);
+                    GMEngine.butterflyY += 0.01;
+                }
+                gl.glTranslatef(GMEngine.butterflyX, GMEngine.butterflyY, 0f);
+                gl.glMatrixMode(GL10.GL_TEXTURE);
+                gl.glLoadIdentity();
+                gl.glTranslatef(0.51f, 0.25f, 0.0f);
+                butterfly.draw(gl);
+                gl.glPopMatrix();
+                gl.glLoadIdentity();
                 butterfly_frams += 1;
-            } else {
-                butterfly_frams = 0;
-            }
-            GMEngine.butterflyX += 0.01 * (GMEngine.leavesX - GMEngine.butterflyX) / (GMEngine.leavesY - GMEngine.butterflyY);
-            GMEngine.butterflyY += 0.01;
+                if (GMEngine.butterflyX <= -1 || GMEngine.butterflyX >= (10 / 1.5) || GMEngine.butterflyY > 10 / 0.9) {
+                    GMEngine.butterflyX = new Random().nextInt(6);
+                    GMEngine.butterflyY = 0;
+                    GMEngine.game_score += 10;
+                    GameMain.MyHandler mHandler1 = GameMain.mAPP.getHandler();
+                    mHandler1.sendEmptyMessage(2);
+                }
+                if (GMEngine.collision) {
+                    GMEngine.butterflyX = 0;
+                    GMEngine.butterflyY = 0;
+                    if (sheetX == 0 && sheetY == 0) {
+                        sheetX += .26;
+                    } else if ((sheetX - 0.26f <= 0.0001 || sheetX - .51f <= .0001) && sheetY == 0) {
+                        sheetX += .25;
+                    } else if (sheetX - .76 <= 0.001 && sheetY == 0) {
+                        sheetX = 0f;
+                        sheetY = 0.26f;
+                    } else {
+                        GMEngine.gameOver = true;
+                        GMEngine.branchY = -0.5f;
+                        GameMain.MyHandler mHandler2 = GameMain.mAPP.getHandler();
+                        mHandler2.sendEmptyMessage(1);
 
-        } else if (butterfly_frams < 8) {
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            gl.glPushMatrix();
-            //缩放
-            gl.glScalef(.15f, .09f, 1f);
-            GMEngine.butterflyX += 0.01 * (GMEngine.leavesX - GMEngine.butterflyX) / (GMEngine.leavesY - GMEngine.butterflyY);
-            GMEngine.butterflyY += 0.01;
-            gl.glTranslatef(GMEngine.butterflyX, GMEngine.butterflyY, 0f);
-            gl.glMatrixMode(GL10.GL_TEXTURE);
-            gl.glLoadIdentity();
-            gl.glTranslatef(0.51f, 0.25f, 0.0f);
-            butterfly.draw(gl);
-            gl.glPopMatrix();
-            gl.glLoadIdentity();
-            butterfly_frams += 1;
-            if (GMEngine.butterflyX <= -1 || GMEngine.butterflyX >= (10 / 1.5) || GMEngine.butterflyY > 10 / 0.9) {
-                GMEngine.butterflyX = 0;
-                GMEngine.butterflyY = 0;
+                        ContentValues values1 = new ContentValues();
+                        values1.put("score", GMEngine.game_score);
+                        GMEngine.db.insert("GameRanking", "错误！", values1);
+                    }
+                }
             }
-
         }
 
     }
 
     private void detectCollisions() {
-        if (GMEngine.leavesY >= GMEngine.butterflyY - 1
+        if (GMEngine.leavesY >= GMEngine.butterflyY - 0.9
                 && GMEngine.leavesY <= GMEngine.butterflyY
                 && GMEngine.leavesX <= GMEngine.butterflyX + 1
                 && GMEngine.leavesX >= GMEngine.butterflyX - 1) {
-            GMEngine.damage_value += 1;
+            GMEngine.collision = true;
+        } else {
+            GMEngine.collision = false;
+        }
+        if (branchtype == 0) {
+            if (2.25 <= GMEngine.branchY
+                    && 3.45 >= GMEngine.branchY
+                    && GMEngine.leavesX <= GMEngine.branchLX + 3) {
+                GMEngine.gameOver = true;
+                GMEngine.branchY = -0.5f;
+
+            }
+        } else {
+            if (2.25 <= GMEngine.branchY
+                    && 3.45 >= GMEngine.branchY
+                    && GMEngine.leavesX >= 10 / 2.7 - 1) {
+                GMEngine.gameOver = true;
+                GMEngine.branchY = -0.5f;
+
+            }
         }
     }
+
 }

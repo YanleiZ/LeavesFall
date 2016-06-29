@@ -13,10 +13,18 @@
     android:weightSum="1"
     tools:context="com.yanlei.fallingLeaves.StartActivity">
 
-    <LinearLayout
-        android:layout_width="198dp"
+    <Switch
+        android:id="@+id/musicswitch"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="right|top"
+        android:checked="true"
+        android:text="音效" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="vertical">
 
         <Button
@@ -27,8 +35,7 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="200dp"
             android:alpha="200"
-            android:background="@drawable/start_btn"
-            android:text="开始游戏" />
+            android:background="@drawable/start_btn" />
 
         <Button
             android:id="@+id/listbtn"
@@ -38,8 +45,7 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
             android:alpha="200"
-            android:background="@drawable/start_btn"
-            android:text="排行榜" />
+            android:background="@drawable/ranking_btn" />
 
         <Button
             android:id="@+id/exitbtn"
@@ -49,15 +55,6 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
             android:alpha="200"
-            android:background="@drawable/start_btn"
-            android:text="退出游戏" />
+            android:background="@drawable/exit_btn" />
     </LinearLayout>
-
-    <Switch
-        android:id="@+id/musicswitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
-        android:checked="true"
-        android:text="音效" />
 </FrameLayout>

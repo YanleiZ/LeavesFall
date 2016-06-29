@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">GravityTest</string>
+    <string name="app_name">重力落叶</string>
     <string name="title_activity_start">StartActivity</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
     <string name="title_activity_game_main">GameMain</string>
+    <string name="title_activity_game_ranking">GameRankingActivity</string>
 </resources>

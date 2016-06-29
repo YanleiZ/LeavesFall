@@ -1,4 +1,4 @@
-package com.yanlei.fallingLeaves;
+package com.yanlei.fallingLeaves.adversary;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -25,16 +25,16 @@ public class Branch {
 
     private float vertices[] = {
             0.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
+            2.0f, 0.0f, 0.0f,
+            2.0f, 1.0f, 0.0f,
             0.0f, 1.0f, 0.0f,
     };
 
     private float texture[] = {
             0.0f, 0.0f,
-            0.25f, 0.0f,
-            0.25f, 0.25f,
-            0.0f, 0.25f,
+            0.5f, 0.0f,
+            0.5f, 1f,
+            0.0f, 1f,
     };
 
     private byte indices[] = {
