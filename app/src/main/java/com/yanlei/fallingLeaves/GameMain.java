@@ -11,7 +11,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -109,10 +108,9 @@ public class GameMain extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            if (msg.what == 1 && GMEngine.overint == 0) { // 更新UI
-                Log.i("---------", ">>>>>>>>>>>>>>>>>>>>>>");
+            if (msg.what == 1) { // 更新UI
+
                 gameOver();
-                GMEngine.overint++;
             } else if (msg.what == 2) {
                 tv.setText("当前分数：" + " " + GMEngine.game_score);
             }

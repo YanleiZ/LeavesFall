@@ -2,7 +2,6 @@ package com.yanlei.fallingLeaves;
 
 import android.content.ContentValues;
 import android.opengl.GLSurfaceView.Renderer;
-import android.util.Log;
 
 import com.yanlei.fallingLeaves.adversary.Branch;
 import com.yanlei.fallingLeaves.adversary.Butterfly;
@@ -74,7 +73,6 @@ public class GameRender implements Renderer {
         gl.glTranslatef(0.0f, bgScroll1, 0.0f);
         background.draw(gl);
         gl.glPopMatrix();
-        Log.i("zzzzz", GMEngine.gameOver + "  ------------------");
         if (!GMEngine.gameOver) {
             bgScroll1 += GMEngine.SCROLL_BACKGROUND_1;
         }
@@ -288,6 +286,7 @@ public class GameRender implements Renderer {
             values1.put("score", GMEngine.game_score);
             GMEngine.db.insert("GameRanking", "错误！", values1);
             GMEngine.branchY = -0.5f;
+            GMEngine.overint++;
         }
     }
 
@@ -363,7 +362,8 @@ public class GameRender implements Renderer {
                         GMEngine.branchY = -0.5f;
                         GameMain.MyHandler mHandler2 = GameMain.mAPP.getHandler();
                         mHandler2.sendEmptyMessage(1);
-
+                        GMEngine.branchY = -0.5f;
+                        GMEngine.overint++;
                         ContentValues values1 = new ContentValues();
                         values1.put("score", GMEngine.game_score);
                         GMEngine.db.insert("GameRanking", "错误！", values1);
