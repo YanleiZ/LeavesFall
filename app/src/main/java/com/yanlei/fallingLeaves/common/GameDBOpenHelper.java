@@ -14,7 +14,7 @@ public class GameDBOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE GameRanking(RankingId INTEGER PRIMARY KEY AUTOINCREMENT,score INTEGER,[CreatedTime] playtime NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+        db.execSQL("CREATE TABLE GameRanking(RankingId INTEGER PRIMARY KEY AUTOINCREMENT,score INTEGER,[CreatedTime] playtime NOT NULL DEFAULT (DATETIME('NOW','LOCALTIME')))");
     }
 
     @Override
