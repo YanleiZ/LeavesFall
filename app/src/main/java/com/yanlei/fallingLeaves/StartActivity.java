@@ -2,14 +2,19 @@ package com.yanlei.fallingLeaves;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wandoujia.ads.sdk.Ads;
 import com.yanlei.fallingLeaves.common.GMEngine;
 import com.yanlei.fallingLeaves.common.GameDBOpenHelper;
 
@@ -19,6 +24,11 @@ public class StartActivity extends Activity {
     private Button exit_btn;
     private Switch music_switch;
     GameDBOpenHelper myDBHelp;
+    //ads
+    private static final String APP_ID = "100041686";
+    private static final String SECRET_KEY = "74db3f5a0ab0c3311bf46c08ede6963f";
+    private static final String BANNER = "f2730aecb8578e92127b16186e97298a";
+    //
 
 
     @Override
@@ -106,6 +116,46 @@ public class StartActivity extends Activity {
         });
         myDBHelp = new GameDBOpenHelper(StartActivity.this, "GameRanking.db", null, 1);
         GMEngine.db = myDBHelp.getWritableDatabase();
+        //ads
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                try {
+                    Ads.init(StartActivity.this, APP_ID, SECRET_KEY);
+                    return true;
+                } catch (Exception e) {
+                    Log.e("ads-sample", "error", e);
+                    return false;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Boolean success) {
+                final ViewGroup container = (ViewGroup) findViewById(R.id.banner_container);
+
+                if (success) {
+                    /**
+                     * pre load
+                     */
+                    Ads.preLoad(BANNER, Ads.AdFormat.banner);
+
+
+                    /**
+                     * add ad views
+                     */
+                    View bannerView = Ads.createBannerView(StartActivity.this, BANNER);
+                    container.addView(bannerView, new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                } else {
+                    TextView errorMsg = new TextView(StartActivity.this);
+                    errorMsg.setText("init failed");
+                    container.addView(errorMsg);
+                }
+            }
+        }.execute();
+        //
     }
 
     //保存点击的时间
