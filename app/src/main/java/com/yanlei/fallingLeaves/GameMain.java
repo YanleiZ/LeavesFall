@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,8 +12,12 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextPaint;
+import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yanlei.fallingLeaves.common.GMEngine;
@@ -23,6 +28,8 @@ public class GameMain extends Activity {
 
     public static Handler_a mAPP = null;
     TextView tv;
+    ImageView iv;
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +41,33 @@ public class GameMain extends Activity {
         mAPP = new Handler_a();
         handler = new MyHandler();
         mAPP.setHandler(handler);
+        //布局
+        linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        //生命值
+        iv = new ImageView(this);
+        RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams(450, 100);
+        ivParams.addRule(RelativeLayout.ALIGN_RIGHT);
+        iv.setImageResource(R.mipmap.hp5);
+        iv.setLayoutParams(ivParams);
+
+        linearLayout.addView(iv);
+        //得分
         tv = new TextView(this);
+        TextPaint tp = tv.getPaint();
+        tp.setFakeBoldText(true);
+        tv.setTextSize(17);
+        tv.setTextColor(Color.YELLOW);
         tv.setText("当前分数：" + " " + "" + GMEngine.game_score);
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        textParams.setMargins(0, 0, 0, 0);
-        addContentView(tv, textParams);
+        RelativeLayout.LayoutParams tvParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tvParams.addRule(RelativeLayout.ALIGN_LEFT);
+        tv.setLayoutParams(tvParams);
+        linearLayout.addView(tv);
+
+        RelativeLayout.LayoutParams allLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        addContentView(linearLayout, allLayoutParams);
+
     }
 
     @Override
@@ -109,11 +138,24 @@ public class GameMain extends Activity {
             super.handleMessage(msg);
 
             if (msg.what == 1) { // 更新UI
-
+                iv.setImageResource(R.mipmap.hp0);
                 gameOver();
             } else if (msg.what == 2) {
                 tv.setText("当前分数：" + " " + GMEngine.game_score);
+            } else if (msg.what == 31) {
+                iv.setImageResource(R.mipmap.hp4);
+            } else if (msg.what == 32) {
+                iv.setImageResource(R.mipmap.hp3);
+            } else if (msg.what == 33) {
+                iv.setImageResource(R.mipmap.hp2);
+            } else if (msg.what == 34) {
+                iv.setImageResource(R.mipmap.hp1);
             }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return true;
     }
 }

@@ -20,7 +20,7 @@
         <activity
             android:name=".GameMain"
             android:label="@string/title_activity_game_main"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/FullScreenTheme" />
 
         <service
             android:name=".common.BackgroundMusic"

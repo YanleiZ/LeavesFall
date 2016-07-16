@@ -311,7 +311,7 @@ public class GameRender implements Renderer {
                 } else {
                     butterfly_frams = 0;
                 }
-                if (GMEngine.leavesY - GMEngine.butterflyY <= 1) {
+                if (GMEngine.leavesY - GMEngine.butterflyY <= 0.5) {
                     GMEngine.butterflyY += 0.01;
                     GMEngine.butterflyX += 0.01;
                 } else {
@@ -352,16 +352,32 @@ public class GameRender implements Renderer {
                     GMEngine.butterflyY = 0;
                     if (sheetX == 0 && sheetY == 0) {
                         sheetX += .26;
-                    } else if ((sheetX - 0.26f <= 0.0001 || sheetX - .51f <= .0001) && sheetY == 0) {
+                        //发送消息改变生命值
+                        GameMain.MyHandler mHandler4_1 = GameMain.mAPP.getHandler();
+                        mHandler4_1.sendEmptyMessage(31);
+                    } else if (sheetX - 0.26f <= 0.0001  && sheetY == 0) {
                         sheetX += .25;
-                    } else if (sheetX - .76 <= 0.001 && sheetY == 0) {
+                        //发送消息改变生命值
+                        GameMain.MyHandler mHandler4_2 = GameMain.mAPP.getHandler();
+                        mHandler4_2.sendEmptyMessage(32);
+
+                    } else if ( sheetX - .51f <= .0001 && sheetY == 0) {
+                        sheetX += .25;
+                        //发送消息改变生命值
+                        GameMain.MyHandler mHandler4_2 = GameMain.mAPP.getHandler();
+                        mHandler4_2.sendEmptyMessage(33);
+
+                    }else if (sheetX - .76 <= 0.001 && sheetY == 0) {
                         sheetX = 0f;
                         sheetY = 0.26f;
+                        //发送消息改变生命值
+                        GameMain.MyHandler mHandler4_3 = GameMain.mAPP.getHandler();
+                        mHandler4_3.sendEmptyMessage(34);
                     } else {
                         GMEngine.gameOver = true;
                         GMEngine.branchY = -0.5f;
-                        GameMain.MyHandler mHandler2 = GameMain.mAPP.getHandler();
-                        mHandler2.sendEmptyMessage(1);
+                        GameMain.MyHandler mHandler5 = GameMain.mAPP.getHandler();
+                        mHandler5.sendEmptyMessage(1);
                         GMEngine.branchY = -0.5f;
                         GMEngine.overint++;
                         ContentValues values1 = new ContentValues();
