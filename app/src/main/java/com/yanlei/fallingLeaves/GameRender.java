@@ -302,7 +302,7 @@ public class GameRender implements Renderer {
                 gl.glTranslatef(GMEngine.butterflyX, GMEngine.butterflyY, 0f);
                 gl.glMatrixMode(GL10.GL_TEXTURE);
                 gl.glLoadIdentity();
-                gl.glTranslatef(0.26f, 0.25f, 0.0f);
+                gl.glTranslatef(0.25f, 0.25f, 0.0f);
                 butterfly.draw(gl);
                 gl.glPopMatrix();
                 gl.glLoadIdentity();
@@ -335,7 +335,7 @@ public class GameRender implements Renderer {
                 gl.glTranslatef(GMEngine.butterflyX, GMEngine.butterflyY, 0f);
                 gl.glMatrixMode(GL10.GL_TEXTURE);
                 gl.glLoadIdentity();
-                gl.glTranslatef(0.51f, 0.25f, 0.0f);
+                gl.glTranslatef(0.50f, 0.25f, 0.0f);
                 butterfly.draw(gl);
                 gl.glPopMatrix();
                 gl.glLoadIdentity();
@@ -351,23 +351,23 @@ public class GameRender implements Renderer {
                     GMEngine.butterflyX = 0;
                     GMEngine.butterflyY = 0;
                     if (sheetX == 0 && sheetY == 0) {
-                        sheetX += .26;
+                        sheetX += .25;
                         //发送消息改变生命值
                         GameMain.MyHandler mHandler4_1 = GameMain.mAPP.getHandler();
                         mHandler4_1.sendEmptyMessage(31);
-                    } else if (sheetX - 0.26f <= 0.0001  && sheetY == 0) {
+                    } else if (sheetX - 0.25f <= 0.0001  && sheetY == 0) {
                         sheetX += .25;
                         //发送消息改变生命值
                         GameMain.MyHandler mHandler4_2 = GameMain.mAPP.getHandler();
                         mHandler4_2.sendEmptyMessage(32);
 
-                    } else if ( sheetX - .51f <= .0001 && sheetY == 0) {
+                    } else if ( sheetX - .50f <= .0001 && sheetY == 0) {
                         sheetX += .25;
                         //发送消息改变生命值
                         GameMain.MyHandler mHandler4_2 = GameMain.mAPP.getHandler();
                         mHandler4_2.sendEmptyMessage(33);
 
-                    }else if (sheetX - .76 <= 0.001 && sheetY == 0) {
+                    }else if (sheetX - .75 <= 0.001 && sheetY == 0) {
                         sheetX = 0f;
                         sheetY = 0.26f;
                         //发送消息改变生命值

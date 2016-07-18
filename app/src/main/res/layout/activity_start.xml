@@ -57,4 +57,11 @@
             android:alpha="200"
             android:background="@drawable/exit_btn" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/banner_container"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" />
 </FrameLayout>
