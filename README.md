@@ -1,6 +1,7 @@
 # LeavesFall
 《重力落叶》游戏
 
+使用OpenGL ES开发的休闲小游戏，逻辑比较简单。
 
 下载地址：http://www.wandoujia.com/apps/com.yanlei.fallingLeaves
 
